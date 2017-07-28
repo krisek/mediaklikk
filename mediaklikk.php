@@ -5,14 +5,14 @@ $streamid="mtv4live";
 #$streamid="dunalive";
 #$streamid="mtv2live";
 #$streamid="mtv1live";
-
+header("Content-type: text/plain");
 foreach( $argv as $argument ) {
         if( $argument == $argv[ 0 ] ) continue;
 
         $pair = explode( "=", $argument );
         $variableName = substr( $pair[ 0 ], 2 );
         $variableValue = $pair[ 1 ];
-//        echo $variableName . " = " . $variableValue . "\n";
+        echo $variableName . " = " . $variableValue . "\n";
         // Optionally store the variable in $_REQUEST
         $_REQUEST[ $variableName ] = $variableValue;
 }
@@ -37,11 +37,12 @@ if($_REQUEST[rewrite] != ""){
 
 $site=file_get_contents("http://player.mediaklikk.hu/player/player-inside-full2.php?streamid=$streamid&userid=mtva");
 
+#print "<code>\n";
 #print $site;
-
-preg_match_all("/(http:\/\/.*connectmedia.*)/",$site,$match);
-
-$url=preg_replace("/\'.*/","",$match[0][0]);
+#print "</code>\n";
+preg_match_all("/(http.*connectmedia.*)/",$site,$match);
+$url = $match[0][0];
+$url=preg_replace(array("/\\\\/"),array(""),$url);
 
 if($rewrite != ""){
     $url=preg_replace("/http:\/\/.*connectmedia.hu\//","$rewrite",$url);
